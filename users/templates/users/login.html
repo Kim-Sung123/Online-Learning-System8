@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LearnPro Online Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .login-left {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+        }
+
+        .login-right {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .features li::before {
+            content: '✓';
+            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-control:hover {
+            border-color: #c0c6d4;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background: #fee;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-success {
+            background: #e8f5e8;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            border: 1px solid #b3e0ff;
+            color: #004085;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 45px;
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon .form-control {
+            padding-left: 45px;
+        }
+
+        .input-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            z-index: 2;
+        }
+
+        /* Role badges */
+        .role-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .role-badge {
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #666;
+            border: 1px solid #e1e5e9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                max-width: 450px;
+            }
+
+            .login-left {
+                padding: 30px;
+                text-align: center;
+            }
+
+            .login-right {
+                padding: 30px;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .features {
+                margin-top: 20px;
+            }
+
+            .features li {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .login-left,
+            .login-right {
+                padding: 25px;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            .login-header h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Loading animation */
+        .btn-loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-right-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side - Branding -->
+        <div class="login-left">
+            <div class="floating">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i> LearnPro
+                </div>
+                <p class="tagline">Your gateway to knowledge and professional growth</p>
+            </div>
+            
+            <ul class="features">
+                <li>Access to 1000+ courses</li>
+                <li>Learn from industry experts</li>
+                <li>Flexible learning schedule</li>
+                <li>Interactive assignments</li>
+                <li>Career advancement opportunities</li>
+            </ul>
+
+            <div class="role-badges">
+                <span class="role-badge"><i class="fas fa-user-graduate"></i> Student</span>
+                <span class="role-badge"><i class="fas fa-chalkboard-teacher"></i> Instructor</span>
+                <span class="role-badge"><i class="fas fa-user-tie"></i> Employee</span>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="login-right">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to your account to continue learning</p>
+            </div>
+
+            <!-- Messages/Alerts -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="alert alert-error">
+                    <strong>Error:</strong> Please check your username and password.
+                </div>
+            {% endif %}
+
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+                
+                <div class="form-group input-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" 
+                           name="username" 
+                           class="form-control" 
+                           placeholder="Enter your username"
+                           required
+                           autofocus>
+                </div>
+
+                <div class="form-group input-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" 
+                           name="password" 
+                           class="form-control" 
+                           id="password"
+                           placeholder="Enter your password"
+                           required>
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginButton">
+                    <span id="buttonText">Sign In</span>
+                </button>
+
+                <div class="form-footer">
+                    <p>Demo Accounts:</p>
+                    <small>
+                        Student: student1 / Instructor: instructor1 / Employee: admin<br>
+                        Password: password123
+                    </small>
+                    <p style="margin-top: 15px;">
+                        Need help? <a href="#">Contact Support</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+            const buttonText = document.getElementById('buttonText');
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Toggle eye icon
+                const icon = this.querySelector('i');
+                icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+            });
+
+            // Form submission loading state
+            loginForm.addEventListener('submit', function() {
+                loginButton.classList.add('btn-loading');
+                buttonText.style.visibility = 'hidden';
+                loginButton.disabled = true;
+            });
+
+            // Add focus effects
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+
+            // Auto-fill demo accounts for testing
+            function fillDemoAccount(role) {
+                const usernameField = document.querySelector('input[name="username"]');
+                const passwordField = document.getElementById('password');
+                
+                const accounts = {
+                    student: { username: 'student', password: '123' },
+                    instructor: { username: 'teacher', password: '123' },
+                    employee: { username: 'emp', password: '123' }
+                };
+                
+                if (accounts[role]) {
+                    usernameField.value = accounts[role].username;
+                    passwordField.value = accounts[role].password;
+                }
+            }
+
+            // Add click handlers to role badges for demo (optional)
+            document.querySelectorAll('.role-badge').forEach(badge => {
+                badge.style.cursor = 'pointer';
+                badge.addEventListener('click', function() {
+                    const role = this.textContent.toLowerCase().includes('student') ? 'student' :
+                                this.textContent.toLowerCase().includes('instructor') ? 'instructor' : 'employee';
+                    fillDemoAccount(role);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

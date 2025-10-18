@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - Learning System{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Employee Dashboard</title>
+    <style>
+        :root {
+            --primary: #6f42c1;
+            --secondary: #e83e8c;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --dark: #343a40;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 5px solid var(--primary);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .management-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .management-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--primary), #5a2d9c);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+        }
+
+        .section-title {
+            color: var(--dark);
+            margin: 50px 0 25px 0;
+            font-size: 1.8em;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 12px;
+        }
+
+        .recent-activity {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin: 25px 0;
+        }
+
+        .activity-item {
+            padding: 15px;
+            border-left: 4px solid var(--success);
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .icon-large {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="welcome-section">
+                <h1>💼 Employee Dashboard</h1>
+                <div class="user-info">
+                    <p><strong>Name:</strong> {{ employee.name }} • <strong>Username:</strong> {{ employee.user.username
+                        }}</p>
+                    <p><strong>Email:</strong> {{ employee.user.email|default:"Not set" }} • <strong>Role:</strong>
+                        Employee</p>
+                    <p><strong>Phone:</strong> {{ employee.phone }} • <strong>Member since:</strong> {{
+                        employee.user.date_joined|date:"M Y" }}</p>
+                </div>
+                <div style="margin-top: 25px;">
+                    <a href="/logout/" class="btn btn-logout">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Statistics -->
+        <h2 class="section-title">📊 System Overview</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>👥 Total Users</h3>
+                <div class="stat-number">{{ system_stats.total_users }}</div>
+                <p>Registered users in system</p>
+            </div>
+            <div class="stat-card">
+                <h3>🎓 Total Students</h3>
+                <div class="stat-number">{{ system_stats.total_students }}</div>
+                <p>Active student accounts</p>
+            </div>
+            <div class="stat-card">
+                <h3>👨‍🏫 Total Instructors</h3>
+                <div class="stat-number">{{ system_stats.total_instructors }}</div>
+                <p>Teaching staff</p>
+            </div>
+            <div class="stat-card">
+                <h3>💼 Total Employees</h3>
+                <div class="stat-number">{{ system_stats.total_employees }}</div>
+                <p>Administrative staff</p>
+            </div>
+            <div class="stat-card">
+                <h3>📚 Total Courses</h3>
+                <div class="stat-number">{{ system_stats.total_courses }}</div>
+                <p>Available courses</p>
+            </div>
+            <div class="stat-card">
+                <h3>📈 Total Enrollments</h3>
+                <div class="stat-number">{{ system_stats.total_enrollments }}</div>
+                <p>Course registrations</p>
+            </div>
+            <div class="stat-card">
+                <h3>✏️📒▶️ Total Lessons</h3>
+                <div class="stat-number">{{ system_stats.total_lesson }}</div>
+                <p>lessons registrations</p>
+            </div>
+            <div class="stat-card">
+                <h3>▢🎓▢ Total Category</h3>
+                <div class="stat-number">{{ system_stats.total_category }}</div>
+                <p>Category registrations</p>
+            </div>
+            <div class="stat-card">
+                <h3>🟢 Active Users (Week)</h3>
+                <div class="stat-number">{{ system_stats.active_users_week }}</div>
+                <p>Recently active</p>
+            </div>
+            <div class="stat-card">
+                <h3>⚡ System Uptime</h3>
+                <div class="stat-number">{{ system_stats.system_uptime }}</div>
+                <p>Platform availability</p>
+            </div>
+        </div>
+
+        <!-- Management Tools -->
+        <h2 class="section-title">🔧 Management Tools</h2>
+        <div class="management-grid">
+            <a href="/user_list/" class="management-card">
+                <div class="icon-large">👥</div>
+                <h3>User Management</h3>
+                <p>Manage all system users</p>
+            </a>
+            <a href="/students/" class="management-card">
+                <div class="icon-large">🎓</div>
+                <h3>Student Management</h3>
+                <p>Manage student accounts</p>
+            </a>
+            <a href="/instructors/" class="management-card">
+                <div class="icon-large">👨‍🏫</div>
+                <h3>Instructor Management</h3>
+                <p>Manage teaching staff</p>
+            </a>
+            <a href="/employees/" class="management-card">
+                <div class="icon-large">💼</div>
+                <h3>Employee Management</h3>
+                <p>Manage administrative staff</p>
+            </a>
+            <a href="/courses/" class="management-card">
+                <div class="icon-large">📚</div>
+                <h3>Course Management</h3>
+                <p>Manage all courses</p>
+            </a>
+            <a href="/enrollments/" class="management-card">
+                <div class="icon-large">📋✏️</div>
+                <h3>Enrollments Management</h3>
+                <p>Manage all enrollments</p>
+            </a>
+            <a href="/lessons/" class="management-card">
+                <div class="icon-large">✏️📒▶️</div>
+                <h3>Lessons Management</h3>
+                <p>Manage all lessons</p>
+            </a>
+            <a href="/categories/" class="management-card">
+                <div class="icon-large"> ▢🎓▢</div>
+                <h3>Category Management</h3>
+                <p>Manage all categories</p>
+            </a>
+            <a href="/tags/" class="management-card">
+                <div class="icon-large"> 🏷️ 🏷️</div>
+                <h3>Tag Management</h3>
+                <p>Manage all tags</p>
+            </a>
+            <a href="/register/" class="management-card">
+                <div class="icon-large">🪪👤✓</div>
+                <h3>Registered Management</h3>
+                <p>Manage all register</p>
+            </a>
+        </div>
+
+        <!-- Recent Activity -->
+        <h2 class="section-title">📈 Recent Activity</h2>
+        <div class="recent-activity">
+            {% for activity in recent_activity %}
+            <div class="activity-item">
+                <strong>{{ activity.type }}</strong> - {{ activity.description }}
+                <span style="float: right; color: #666;">{{ activity.time }}</span>
+            </div>
+            {% empty %}
+            <div class="activity-item">
+                <p>No recent activity to display.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Quick Actions -->
+        <h2 class="section-title">⚡ Quick Actions</h2>
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="/admin/" class="btn">Django Admin</a>
+            {% endblock %}

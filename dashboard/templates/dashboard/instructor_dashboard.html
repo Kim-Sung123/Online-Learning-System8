@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - Learning System{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Instructor Dashboard</title>
+    <style>
+        :root {
+            --primary: #28a745;
+            --secondary: #17a2b8;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --dark: #343a40;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 5px solid var(--primary);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .course-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--secondary);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--primary), #1e7e34);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), #138496);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #e0a800);
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+        }
+
+        .section-title {
+            color: var(--dark);
+            margin: 50px 0 25px 0;
+            font-size: 1.8em;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="welcome-section">
+                <h1>👨‍🏫 Instructor Dashboard</h1>
+                <div class="user-info">
+                    <p><strong>Name:</strong> {{ instructor.name }} • <strong>Username:</strong> {{
+                        instructor.user.username }}</p>
+                    <p><strong>Email:</strong> {{ instructor.user.email|default:"Not set" }} • <strong>Role:</strong>
+                        Instructor</p>
+                    <p><strong>Salary:</strong> ${{ instructor.salary }}
+                </div>
+                <div style="margin-top: 25px;">
+                    <a href="/logout/" class="btn btn-logout">Logout</a>
+                </div>
+            </div>
+        </div>
+        <!-- Course Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>📚 Total Courses</h3>
+                <div class="stat-number">{{total_courses }}</div>
+                <p>Available courses</p>
+            </div>
+            <div class="stat-card">
+                <h3>🎓 Total Students</h3>
+                <div class="stat-number">{{total_students }}</div>
+                <p>Active student accounts</p>
+            </div>
+            <div class="stat-card">
+                <h3>Average Rating</h3>
+                <div class="stat-number">4.7/5</div>
+                <p>Student feedback</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Revenue</h3>
+                <div class="stat-number">$5,850</div>
+                <p>Course earnings</p>
+            </div>
+        </div>
+
+    
+
+        <!-- My Courses -->
+        <h2 class="section-title">📚 My Courses</h2>
+        <div class="courses-grid">
+            <div class="course-card">
+                <h3>Advanced Python</h3>
+                <p><strong>Students:</strong> 45</p>
+                <p><strong>Rating:</strong> 4.7/5.0 ⭐</p>
+                <p><strong>Revenue:</strong> $2,250</p>
+                <button class="btn">Manage Course</button>
+                <button class="btn btn-secondary">View Analytics</button>
+            </div>
+            <div class="course-card">
+                <h3>Machine Learning</h3>
+                <p><strong>Students:</strong> 32</p>
+                <p><strong>Rating:</strong> 4.8/5.0 ⭐</p>
+                <p><strong>Revenue:</strong> $1,920</p>
+                <button class="btn">Manage Course</button>
+                <button class="btn btn-secondary">View Analytics</button>
+            </div>
+            <div class="course-card">
+                <h3>Data Science</h3>
+                <p><strong>Students:</strong> 28</p>
+                <p><strong>Rating:</strong> 4.6/5.0 ⭐</p>
+                <p><strong>Revenue:</strong> $1,680</p>
+                <button class="btn">Manage Course</button>
+                <button class="btn btn-secondary">View Analytics</button>
+            </div>
+        </div>
+
+        <!-- Assignments to Grade -->
+        <h2 class="section-title">📝 Assignments to Grade</h2>
+        <div class="courses-grid">
+            <div class="course-card">
+                <h3>Final Project</h3>
+                <p><strong>Course:</strong> Advanced Python</p>
+                <p><strong>Submissions:</strong> 12</p>
+                <p><strong>Due:</strong> 2025-10-18</p>
+                <button class="btn btn-warning">Grade Now</button>
+            </div>
+            <div class="course-card">
+                <h3>Model Training</h3>
+                <p><strong>Course:</strong> Machine Learning</p>
+                <p><strong>Submissions:</strong> 8</p>
+                <p><strong>Due:</strong> 2025-10-20</p>
+                <button class="btn btn-warning">Grade Now</button>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <h2 class="section-title">⚡ Quick Actions</h2>
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="/courses/" class="btn">Create New Course</a>
+            <a href="/students/" class="btn btn-secondary">View All Students</a>
+            <button class="btn btn-warning">Grade Assignments</button>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock %}

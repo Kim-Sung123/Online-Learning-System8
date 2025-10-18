@@ -1,0 +1,5 @@
+const accounts = {
+                    student: { username: 'student', password: '123' },
+                    instructor: { username: 'teacher', password: '123' },
+                    employee: { username: 'emp', password: '123' }
+                };

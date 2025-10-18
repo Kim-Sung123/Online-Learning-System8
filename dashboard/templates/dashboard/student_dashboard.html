@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - Learning System{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Dashboard</title>
+    <style>
+        :root {
+            --primary: #007bff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --dark: #343a40;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome-section h1 {
+            margin: 0 0 15px 0;
+            font-size: 2.8em;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 5px solid var(--primary);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+
+        .courses-grid,
+        .assignments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .course-card,
+        .assignment-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--success);
+            transition: transform 0.3s;
+        }
+
+        .assignment-card {
+            border-left-color: var(--warning);
+        }
+
+        .course-card:hover,
+        .assignment-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 12px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--success), #20c997);
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--primary), #0056b3);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #1e7e34);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #e0a800);
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+        }
+
+        .section-title {
+            color: var(--dark);
+            margin: 50px 0 25px 0;
+            font-size: 1.8em;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 12px;
+        }
+
+        .urgent {
+            color: var(--danger);
+            font-weight: bold;
+            background: #ffe6e6;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="welcome-section">
+                <h1>🎓 Welcome back, {{ student.name|default:student.user.username }}!</h1>
+                <div class="user-info">
+                    <p><strong>Username:</strong> {{ student.user.username }} • <strong>Email:</strong> {{
+                        student.user.email|default:"Not set" }}</p>
+                    <p><strong>Role:</strong> Student • <strong>Member since:</strong> {{
+                        student.user.date_joined|date:"M Y" }}</p>
+                </div>
+                <div style="margin-top: 25px;">
+                    <a href="/logout/" class="btn btn-logout">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+            <a href="/enrollments/" class="management-card">
+            <div class="stat-card">
+                <h3>📚 Enrolled Courses</h3>
+                <div class="stat-number">{{total_enrollment}}</div>
+                <p>Active learning paths</p>
+            </div>
+            </a>
+            <div class="stat-card">
+                <h3>📊 Average Grade</h3>
+                <div class="stat-number">A-</div>
+                <p>Current performance</p>
+            </div>
+            <div class="stat-card">
+                <h3>⏰ Upcoming Deadlines</h3>
+                <div class="stat-number">2</div>
+                <p>Assignments due soon</p>
+            </div>
+            <div class="stat-card">
+                <h3>🎯 Completion Rate</h3>
+                <div class="stat-number">78%</div>
+                <p>Overall progress</p>
+            </div>
+        </div>
+
+        <!-- Personal Information -->
+        <h2 class="section-title">👤 Personal Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <strong>Full Name:</strong> {{ student.name|default:"Not set" }}
+            </div>
+            <div class="info-item">
+                <strong>Phone:</strong> {{ student.phone|default:"Not set" }}
+            </div>
+            <div class="info-item">
+                <strong>Bio:</strong> {{ student.bio|default:"No bio provided" }}
+            </div>
+            <div class="info-item">
+                <strong>Address:</strong> {{ student.address|default:"Not set" }}
+            </div>
+        </div>
+
+        <!-- Enrolled Courses -->
+        <h2 class="section-title">📖 My Courses</h2>
+        <div class="courses-grid">
+            <div class="course-card">
+                <h3>Python Programming</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%;"></div>
+                </div>
+                <p><strong>Progress:</strong> 75% complete</p>
+                <p><strong>Next Assignment:</strong> Final Project</p>
+                <p><strong>Due Date:</strong> 2025-10-20</p>
+                <button class="btn btn-success" style="margin-top: 15px;">Continue Learning</button>
+            </div>
+            <div class="course-card">
+                <h3>Web Development</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%;"></div>
+                </div>
+                <p><strong>Progress:</strong> 45% complete</p>
+                <p><strong>Next Assignment:</strong> CSS Styling</p>
+                <p><strong>Due Date:</strong> 2025-10-15</p>
+                <button class="btn btn-success" style="margin-top: 15px;">Continue Learning</button>
+            </div>
+            <div class="course-card">
+                <h3>Database Design</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%;"></div>
+                </div>
+                <p><strong>Progress:</strong> 90% complete</p>
+                <p><strong>Next Assignment:</strong> None</p>
+                <p><strong>Due Date:</strong> Completed</p>
+                <button class="btn btn-success" style="margin-top: 15px;">View Certificate</button>
+            </div>
+        </div>
+
+        <!-- Upcoming Assignments -->
+        <h2 class="section-title">⏰ Upcoming Assignments</h2>
+        <div class="assignments-grid">
+            <div class="assignment-card">
+                <h3>Final Project</h3>
+                <p><strong>Course:</strong> Python Programming</p>
+                <p><strong>Due Date:</strong> 2025-10-20</p>
+                <p><strong>Days Left:</strong> 9</p>
+                <button class="btn btn-warning" style="margin-top: 15px;">
+                    Start Assignment
+                </button>
+            </div>
+            <div class="assignment-card">
+                <h3>CSS Styling</h3>
+                <p><strong>Course:</strong> Web Development</p>
+                <p><strong>Due Date:</strong> 2025-10-15</p>
+                <p class="urgent"><strong>Days Left:</strong> 4</p>
+                <button class="btn btn-warning" style="margin-top: 15px;">
+                    Start Assignment
+                </button>
+            </div>
+        </div>
+
+        <!-- Recent Grades -->
+        <h2 class="section-title">📊 Recent Grades</h2>
+        <div class="courses-grid">
+            <div class="course-card">
+                <h3>Midterm Exam</h3>
+                <p><strong>Course:</strong> Python Programming</p>
+                <p><strong>Grade:</strong> <span style="color: #28a745; font-weight: bold;">A</span></p>
+                <p><strong>Score:</strong> 95%</p>
+            </div>
+            <div class="course-card">
+                <h3>SQL Queries</h3>
+                <p><strong>Course:</strong> Database Design</p>
+                <p><strong>Grade:</strong> <span style="color: #17a2b8; font-weight: bold;">B+</span></p>
+                <p><strong>Score:</strong> 88%</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock %}
